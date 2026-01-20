@@ -1,0 +1,29 @@
+package com.jsp.final_project.dao;
+
+import org.springframework.stereotype.Repository;
+
+import com.jsp.final_project.entity.User;
+import com.jsp.final_project.exception.DataNotFoundException;
+import com.jsp.final_project.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Repository
+@RequiredArgsConstructor
+public class UserDao {
+
+	private final UserRepository userRepository;
+
+	public boolean checkIfExists(Long mobile, String email) {
+		return userRepository.existsByMobileOrEmail(mobile, email);
+	}
+	
+	public User findByEmail(String email) {
+		return userRepository.findByEmail(email).orElseThrow(()->new DataNotFoundException("Invalid Email"));
+	}
+
+	public void saveAdmin(User admin) {
+		admin.setRole("ADMIN");
+		userRepository.save(admin);
+	}
+}
